@@ -2,13 +2,13 @@ import logging
 
 from fastapi import APIRouter, Depends
 
-from app.api.dependencies import get_document_service, get_embedder, get_faiss_index
-from app.schemas.query import SearchQuery
-from app.schemas.response import SearchResponse
-from app.search.embeddings import Embedder
-from app.search.faiss_index import FaissIndex
-from app.search.retrieval import retrieve
-from app.services.document_service import DocumentService
+from api.dependencies import get_document_service, get_embedder, get_faiss_index
+from schemas.query import SearchQuery
+from schemas.response import SearchResponse
+from search.embeddings import Embedder
+from search.faiss_index import FaissIndex
+from search.retrieval import retrieve
+from services.document_service import DocumentService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

@@ -1,8 +1,8 @@
 from fastapi import Request
 
-from app.search.embeddings import Embedder
-from app.search.faiss_index import FaissIndex
-from app.services.document_service import DocumentService
+from search.embeddings import Embedder
+from search.faiss_index import FaissIndex
+from services.document_service import DocumentService
 
 
 # These functions are used as FastAPI dependency injectors (Depends(...)).

@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-from app.schemas.response import DocumentResult
+from schemas.response import DocumentResult
 
 logger = logging.getLogger(__name__)
 

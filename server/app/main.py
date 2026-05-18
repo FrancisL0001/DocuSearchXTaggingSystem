@@ -4,12 +4,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.router import api_router
-from app.core.config import get_settings
-from app.core.logging import setup_logging
-from app.search.embeddings import Embedder
-from app.search.faiss_index import FaissIndex
-from app.services.document_service import DocumentService
+from api.router import api_router
+from core.config import get_settings
+from core.logging import setup_logging
+from search.embeddings import Embedder
+from search.faiss_index import FaissIndex
+from services.document_service import DocumentService
 
 logger = logging.getLogger(__name__)
 

@@ -2,9 +2,9 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.api.dependencies import get_document_service
-from app.schemas.response import TagGroup, TagsResponse
-from app.services.document_service import DocumentService
+from api.dependencies import get_document_service
+from schemas.response import TagGroup, TagsResponse
+from services.document_service import DocumentService
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

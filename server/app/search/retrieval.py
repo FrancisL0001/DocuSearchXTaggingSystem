@@ -1,5 +1,5 @@
-from app.search.embeddings import Embedder
-from app.search.faiss_index import FaissIndex
+from search.embeddings import Embedder
+from search.faiss_index import FaissIndex
 
 
 def retrieve(

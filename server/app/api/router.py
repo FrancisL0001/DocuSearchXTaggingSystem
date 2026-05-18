@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.routes import search, tags
+from api.routes import search, tags
 
 # Single router that combines all route modules.
 # Imported and mounted in main.py under the /api/v1 prefix.
