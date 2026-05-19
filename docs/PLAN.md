@@ -14,7 +14,7 @@ Build a semantic document search and auto-tagging system over a corpus of 50–1
 | Vector index | FAISS (flat L2 or inner-product index) |
 | Clustering / tagging | scikit-learn k-means over document embeddings |
 | Backend | FastAPI + Pydantic |
-| Frontend | React |
+| Frontend | React + TypeScript + Tailwind CSS |
 | Scripts | Python (one-off: ingest, embed, index, cluster) |
 
 ---
@@ -32,8 +32,9 @@ corpus (raw docs)
                                        (stored alongside doc metadata)
 
 FastAPI server (runtime)
-  ├── POST /search   — embed query → FAISS kNN → return ranked docs
-  └── GET  /tags     — return documents grouped by cluster tag
+  ├── POST /api/v1/search              — embed query → FAISS kNN → return ranked docs
+  ├── GET  /api/v1/tags                — return documents grouped by cluster tag
+  └── GET  /api/v1/documents/{id}/tags — return tags for one document
 
 React client
   └── search bar + results list with tag chips
@@ -68,16 +69,16 @@ The embedding, indexing, and clustering steps are **offline scripts** run once (
 - [ ] `server/app/core/config.py` — `Settings` (pydantic-settings): paths to model artifacts, FAISS index, top-k default, number of clusters.
 - [ ] `server/app/core/logging.py` — structured logging setup (stdlib `logging`, JSON formatter).
 - [ ] `server/app/schemas/query.py` — `SearchQuery(query: str, top_k: int = 5)`.
-- [ ] `server/app/schemas/response.py` — `DocumentResult(id, title, snippet, score, tags: list[str])`, `SearchResponse(results: list[DocumentResult])`, `TagsResponse(tags: dict[str, list[DocumentResult]])`.
-- [ ] `server/app/services/document_services.py` — `DocumentService`: loads metadata + tags at init, exposes `get_by_ids(ids)`, `get_by_tag(tag)`, `all_tags()`.
+- [ ] `server/app/schemas/response.py` — `DocumentResult(id, title, snippet, score, tags: list[str])`, `SearchResponse(results: list[DocumentResult])`, `TagGroup(tag, documents)`, `TagsResponse(tags: list[TagGroup])`.
+- [ ] `server/app/services/document_service.py` — `DocumentService`: loads metadata + tags at init, exposes document lookup and tag grouping helpers.
 - [ ] `server/app/search/retrieval.py` — `retrieve(query: str, k: int) -> list[(id, score)]`: embed query with `Embedder`, call `FaissIndex.search`.
 - [ ] `server/app/api/dependencies.py` — FastAPI dependency providers for `DocumentService`, `FaissIndex`, `Embedder` (singletons, loaded once at startup).
-- [ ] `server/app/api/routes/search.py` — `POST /search`: validate `SearchQuery`, call retrieval, hydrate results, return `SearchResponse`.
-- [ ] `server/app/api/routes/tags.py` — `GET /tags`: return all tag groups via `DocumentService`. `GET /tags/{tag}`: documents for a specific tag.
+- [ ] `server/app/api/routes/search.py` — `POST /search` route mounted at `/api/v1/search`: validate `SearchQuery`, call retrieval, hydrate results, return `SearchResponse`.
+- [ ] `server/app/api/routes/tags.py` — `GET /tags` and `GET /documents/{id}/tags` routes mounted under `/api/v1`.
 - [ ] `server/app/api/router.py` — mount both route modules under `/api/v1`.
 - [ ] `server/app/main.py` — FastAPI app init, lifespan (load artifacts on startup), mount router, CORS for React dev server.
 
-**Done when:** `uvicorn app.main:app` starts cleanly, `/search` and `/tags` return correct shaped responses.
+**Done when:** `uvicorn app.main:app` starts cleanly, `/api/v1/search` and `/api/v1/tags` return correct shaped responses.
 
 ---
 
@@ -86,8 +87,8 @@ The embedding, indexing, and clustering steps are **offline scripts** run once (
 **Goal:** interactive UI for search and tag browsing.
 
 - [ ] Initialize React app under `client/` (Vite + React).
-- [ ] Search bar component — sends `POST /search`, displays ranked results with title, snippet, score, and tag chips.
-- [ ] Tags panel — fetches `GET /tags`, lists topics; clicking a tag filters the result list.
+- [ ] Search bar component — sends `POST /api/v1/search`, displays ranked results with title, snippet, score, and tag chips.
+- [ ] Tags panel — fetches `GET /api/v1/tags`, lists topics; clicking a tag filters the result list.
 - [ ] Loading and error states for all async calls.
 - [ ] Proxy `/api` to `localhost:8000` in Vite config (avoids CORS friction in dev).
 
@@ -99,11 +100,11 @@ The embedding, indexing, and clustering steps are **offline scripts** run once (
 
 See `docs/TESTING_PLAN.md` for the full test plan. Summary:
 
-- Unit tests: `Embedder`, `FaissIndex`, `clustering`, `DocumentService`.
+- Unit tests: `FaissIndex`, `retrieval`, `clustering`, `DocumentService`, API clients, and React components.
 - Integration tests: `/search` and `/tags` endpoints via FastAPI `TestClient`.
-- Pipeline smoke test: run the three scripts end-to-end on a 10-doc fixture corpus and assert artifacts are produced with correct shapes.
+- Smoke tests: frontend production build; future pipeline smoke test on a small fixture corpus.
 
-**Done when:** `pytest` passes with no failures and key behaviors are covered (see TESTING_PLAN.md).
+**Done when:** `pytest`, `npm test`, and `npm run build` pass with key behaviors covered (see TESTING_PLAN.md).
 
 ---
 
@@ -141,7 +142,7 @@ server/app/core/config.py
 server/app/core/logging.py
 server/app/schemas/query.py
 server/app/schemas/response.py
-server/app/services/document_services.py
+server/app/services/document_service.py
 server/app/search/retrieval.py
 server/app/api/dependencies.py
 server/app/api/routes/search.py
@@ -150,5 +151,6 @@ server/app/api/router.py
 server/app/main.py
 client/  (React app)
 server/tests/
-docs/TESTING_PLAN.md  (fill in)
+docs/TESTING_PLAN.md
+.github/workflows/ci.yml
 ```

@@ -25,14 +25,17 @@ Type a natural-language query and get back ranked, relevant documents in real ti
 ## Project layout
 
 ```
-server/   FastAPI backend, ML pipeline scripts, corpus data
-client/   React + Vite frontend
-docs/     PLAN.md, TESTING_PLAN.md
+server/    FastAPI backend, ML pipeline scripts, corpus data
+client/    React + Vite frontend
+docs/      PLAN.md, TESTING_PLAN.md
+.github/   GitHub Actions CI workflow
 ```
 
 For setup and usage instructions see the component READMEs:
 
 - [server/README.md](server/README.md) — backend setup, pipeline scripts, API reference
 - [client/README.md](client/README.md) — frontend setup and dev workflow
+
+CI runs backend pytest, frontend Vitest tests, and the frontend production build on pushes and pull requests to `main`.
 
 For the full project vision and design decisions see [docs/PLAN.md](docs/PLAN.md).

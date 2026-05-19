@@ -83,8 +83,17 @@ Edit `.env` to override defaults:
 
 ## Docker
 
+The container downloads model artifacts at startup from Cloudflare R2 via `scripts/download_models.py`, then starts Uvicorn.
+
+Required runtime environment variables:
+
+- `R2_ENDPOINT`
+- `R2_ACCESS_KEY`
+- `R2_SECRET_KEY`
+- `R2_BUCKET`
+- `PORT`
+
 ```bash
-# Build and run (requires models/ artifacts to already exist)
 docker build -t docusearch-server .
 docker run -p 8000:8000 docusearch-server
 ```
