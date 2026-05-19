@@ -1,0 +1,27 @@
+# Secrets
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Tests
+tests/
+
+# ML artifacts — served from a mounted volume at runtime, not baked into the image
+models/*
+!models/.gitkeep
+
+# Corpus data — large, not needed in the image
+data/
+
+# Misc
+.DS_Store
+.git/
+.gitignore
+README.md

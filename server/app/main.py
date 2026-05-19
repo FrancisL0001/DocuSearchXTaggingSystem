@@ -46,10 +46,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow the React dev server (Vite default: 5173, CRA default: 3000) to call the API
 app.add_middleware(
     CORSMiddleware,
+    # Exact origins for local dev
     allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    # Regex covers the production Vercel deployment and all Vercel preview URLs
+    allow_origin_regex=r"https://docu-search-x-tagging-system.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
