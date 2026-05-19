@@ -22,6 +22,12 @@ npm run dev
 
 Opens at `http://localhost:5173`. All `/api/*` requests are proxied to `http://localhost:8000`, so the FastAPI backend must be running.
 
+## Run tests
+
+```bash
+npm test
+```
+
 ## Production build
 
 ```bash

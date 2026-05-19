@@ -48,6 +48,13 @@ $env:PYTHONPATH="app"; uvicorn main:app --reload
 
 Server runs at `http://localhost:8000`. Auto-docs at `http://localhost:8000/docs`.
 
+## Run tests
+
+```bash
+cd server
+python -m pytest tests
+```
+
 ## Configuration
 
 Edit `.env` to override defaults:
