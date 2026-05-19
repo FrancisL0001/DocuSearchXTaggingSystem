@@ -43,4 +43,4 @@ ENV HF_HOME=/app/.cache/huggingface
 EXPOSE 8000
 
 # Run the server; reload=False in production
-CMD ["sh", "-c", "python ../scripts/download_models.py && uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "python scripts/download_models.py && uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
