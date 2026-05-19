@@ -4,7 +4,7 @@ from pathlib import Path
 import boto3
 import os
 
-MODEL_DIR = Path("models")
+MODEL_DIR = Path("./models")
 MODEL_DIR.mkdir(exist_ok=True)
 
 s3 = boto3.client(
