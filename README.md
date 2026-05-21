@@ -12,6 +12,36 @@ Type a natural-language query and get back ranked, relevant documents in real ti
 - **Auto-tagging** — applies k-means clustering over document embeddings to assign topic tags without any labeled training data
 - **Topic browsing** — a sidebar lets you explore documents grouped by their automatically generated topic cluster
 
+## Quickstart
+
+**Prerequisites:** Python 3.11+, Node.js 18+
+
+```bash
+# 1. Clone and install backend dependencies
+cd server
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# 2. Build the ML pipeline (run once — takes ~30 s on first run while the model downloads)
+python scripts/generate_embeddings.py
+python scripts/build_index.py
+python scripts/cluster_documents.py
+
+# 3. Start the backend
+PYTHONPATH=app uvicorn main:app --reload
+# → http://localhost:8000  |  docs at http://localhost:8000/docs
+
+# 4. In a separate terminal, start the frontend
+cd ../client
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+Copy `server/.env.example` → `server/.env` and `client/.env.example` → `client/.env` before running if you need to override any defaults.
+
+---
+
 ## Stack
 
 | Layer | Technology |
