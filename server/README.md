@@ -66,6 +66,8 @@ Edit `.env` to override defaults:
 | `MODELS_DIR` | `models` | Where pipeline artifacts are saved/loaded |
 | `DEFAULT_TOP_K` | `5` | Default number of search results |
 | `N_CLUSTERS` | `8` | Number of k-means topic clusters |
+| `SEARCH_RATE_LIMIT_PER_MINUTE` | `30` | Per-client limit for `POST /api/v1/search` |
+| `TAGS_RATE_LIMIT_PER_MINUTE` | `120` | Per-client limit for tag read endpoints |
 
 ## API endpoints
 
@@ -74,6 +76,8 @@ Edit `.env` to override defaults:
 | `POST` | `/api/v1/search` | Semantic search — returns ranked documents |
 | `GET` | `/api/v1/tags` | All topic clusters with their documents |
 | `GET` | `/api/v1/documents/{id}/tags` | Tags assigned to a specific document |
+
+API responses include `X-RateLimit-*` headers. Requests over the per-minute limit return `429` with `Retry-After`.
 
 ### Search request body
 

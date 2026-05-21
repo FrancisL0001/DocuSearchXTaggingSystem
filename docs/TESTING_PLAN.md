@@ -45,6 +45,7 @@ This plan lists the core behaviors worth testing to keep DocuSearch reliable as 
 - Search responses include id, title, snippet, score, and tags for each result.
 - `GET /api/v1/tags` returns all tag groups in the documented response shape.
 - `GET /api/v1/documents/{id}/tags` returns tags for a known document.
+- Rate-limited API routes return `429` with retry headers after the per-client quota is exceeded.
 - API errors use consistent status codes and response bodies.
 - App startup loads artifacts once and reports startup failures clearly.
 

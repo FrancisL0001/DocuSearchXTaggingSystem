@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter, Depends
 
 from api.dependencies import get_document_service, get_embedder, get_faiss_index
+from api.rate_limit import rate_limit_dependency, search_rate_limiter
 from schemas.query import SearchQuery
 from schemas.response import SearchResponse
 from search.embeddings import Embedder
@@ -14,7 +15,11 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/search", response_model=SearchResponse)
+@router.post(
+    "/search",
+    response_model=SearchResponse,
+    dependencies=[Depends(rate_limit_dependency(search_rate_limiter, "search"))],
+)
 def search(
     body: SearchQuery,
     embedder: Embedder = Depends(get_embedder),
