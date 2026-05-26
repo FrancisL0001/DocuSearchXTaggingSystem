@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     # Number of k-means topic clusters — tune this to your corpus size
     n_clusters: int = 8
 
+    # Per-client API rate limits. Search is more expensive because it embeds the query.
+    search_rate_limit_per_minute: int = 30
+    tags_rate_limit_per_minute: int = 120
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

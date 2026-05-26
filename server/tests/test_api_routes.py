@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from api.dependencies import get_document_service, get_embedder, get_faiss_index
+from api.rate_limit import reset_rate_limiters, search_rate_limiter
 from api.router import api_router
 from schemas.response import DocumentResult
 
@@ -74,6 +75,7 @@ class FakeDocumentService:
 
 
 def make_client() -> TestClient:
+    reset_rate_limiters()
     app = FastAPI()
     app.include_router(api_router, prefix="/api/v1")
     app.dependency_overrides[get_embedder] = lambda: FakeEmbedder()
@@ -149,3 +151,19 @@ def test_document_tags_endpoint_returns_tags_or_404() -> None:
     assert known.json() == ["climate"]
     assert missing.status_code == 404
     assert missing.json()["detail"] == "Document 'missing' not found"
+
+
+def test_search_endpoint_returns_429_after_rate_limit_is_exceeded() -> None:
+    client = make_client()
+
+    for _ in range(search_rate_limiter.limit):
+        response = client.post("/api/v1/search", json={"query": "carbon policy", "top_k": 2})
+        assert response.status_code == 200
+
+    limited = client.post("/api/v1/search", json={"query": "carbon policy", "top_k": 2})
+
+    assert limited.status_code == 429
+    assert limited.json()["detail"] == "Rate limit exceeded. Please retry later."
+    assert limited.headers["Retry-After"].isdigit()
+    assert limited.headers["X-RateLimit-Limit"] == str(search_rate_limiter.limit)
+    assert limited.headers["X-RateLimit-Remaining"] == "0"

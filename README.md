@@ -1,5 +1,7 @@
 # DocuSearch
 
+__Live__ : https://docu-search-x-tagging-system.vercel.app/
+
 Semantic document search and auto-tagging over a corpus of policy and research documents.
 
 Type a natural-language query and get back ranked, relevant documents in real time. Documents are automatically grouped into topics using unsupervised clustering — no labeled data required.
